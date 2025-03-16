@@ -323,7 +323,7 @@ const handleEditSubmit = async () => {
     return
   }
   MessagePlugin.success('修改成功')
-  insertDialogVisible.value = false
+  editDialogVisible.value = false
   fetch()
 }
 
