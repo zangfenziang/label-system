@@ -46,6 +46,10 @@ const formData = reactive({
 
 const onSubmit: FormProps['onSubmit'] = ({ validateResult, firstError }) => {
   if (validateResult === true) {
+    if (!formData.username || !formData.password) {
+      MessagePlugin.warning('请填写账号密码')
+      return
+    }
     MessagePlugin.success('提交成功')
   } else {
     console.log('Validate Errors: ', firstError, validateResult)
