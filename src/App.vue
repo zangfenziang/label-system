@@ -6,7 +6,7 @@
           <div style="font-size: 24px">Label System</div>
         </template>
         <template #operations>
-          <div style="margin-right: 8px">{{ userInfo.username }}</div>
+          <div style="margin-right: 8px">{{ user.userInfo.username }}</div>
           <a href="javascript:;" @click="logout"
             ><t-icon class="t-menu__operations-icon" name="logout"
           /></a>
@@ -54,18 +54,14 @@ import { computed, ref, watch } from 'vue'
 import { RouterView } from 'vue-router'
 import { useRoute, useRouter } from 'vue-router'
 import { cgi, logout } from './utils/cgi'
+import { useUserStore } from './stores/user'
 const route = useRoute()
 const router = useRouter()
 const publicPage = computed(() => {
   return ['/'].includes(route.path)
 })
 
-const userInfo = ref({
-  level: 0,
-  status: '',
-  uid: 0,
-  username: '',
-})
+const user = useUserStore()
 
 const handleChange = (path: string) => {
   router.replace({
@@ -79,8 +75,7 @@ watch(
     if (publicPage.value) {
       return
     }
-    const resp = await cgi.get('/cgi/user/me')
-    userInfo.value = resp.data
+    user.init()
   },
   {
     immediate: true,
