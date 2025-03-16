@@ -291,7 +291,7 @@ const columns = ref<TableProps['columns']>([
   {
     colKey: 'opt',
     title: '操作',
-    width: '200',
+    width: '250',
   },
 ])
 
@@ -358,7 +358,7 @@ const handleApplySubmit = async () => {
 }
 
 const changeStatus = async (row: any, status: any) => {
-  const resp = await cgi.post(`/cgi/task/${row.taskId}/unlock`, {
+  const resp = await cgi.post(`/cgi/task/${row.taskId}/status`, {
     from: row.taskStatus,
     to: status,
   })
