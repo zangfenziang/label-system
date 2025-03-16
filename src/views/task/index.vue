@@ -340,7 +340,7 @@ const applyDialogValue = ref(getTaskInitInfo())
 const applyDialogInfo = ref(getTaskInitInfo())
 const applyDialogRowId = ref(0)
 const handleApplySubmit = async () => {
-  const resp = await cgi.post(`/cgi/task/${editDialogRowId.value}/apply`, applyDialogValue.value)
+  const resp = await cgi.post(`/cgi/task/${applyDialogRowId.value}/apply`, applyDialogValue.value)
   if (resp.data.code !== 0) {
     MessagePlugin.warning('提交申请失败，请稍后重试')
     return

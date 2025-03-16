@@ -21,7 +21,9 @@
     </t-form-item>
 
     <t-form-item style="margin: 32px 0 0 0">
-      <t-button theme="primary" size="large" block @click="copy">同步原始数据</t-button>
+      <t-button theme="default" size="large" block @click="copy" style="margin-right: 12px"
+        >同步原始数据</t-button
+      >
       <t-button theme="primary" size="large" type="submit" block>确定</t-button>
     </t-form-item>
   </t-form>
