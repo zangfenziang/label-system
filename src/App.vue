@@ -22,7 +22,7 @@
             </template>
             任务列表
           </t-menu-item>
-          <t-menu-item value="/user">
+          <t-menu-item v-if="user.userInfo.level === UserLevel.Admin" value="/user">
             <template #icon>
               <t-icon name="member" />
             </template>
@@ -50,11 +50,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, watch } from 'vue'
 import { RouterView } from 'vue-router'
 import { useRoute, useRouter } from 'vue-router'
-import { cgi, logout } from './utils/cgi'
+import { logout } from './utils/cgi'
 import { useUserStore } from './stores/user'
+import { UserLevel } from './utils/enum'
 const route = useRoute()
 const router = useRouter()
 const publicPage = computed(() => {
