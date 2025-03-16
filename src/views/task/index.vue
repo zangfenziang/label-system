@@ -76,6 +76,13 @@
   >
     <task-form v-model="editDialogValue" @submit="handleEditSubmit" />
   </t-dialog>
+  <t-dialog
+    v-model:visible="applyDialogVisible"
+    :header="`修改任务-${applyDialogRowId}`"
+    :footer="null"
+  >
+    <apply-form v-model="applyDialogValue" :info="applyDialogInfo" @submit="handleApplySubmit" />
+  </t-dialog>
 </template>
 <script lang="ts" setup>
 import { useUserStore } from '@/stores/user'
@@ -83,7 +90,8 @@ import { cgi } from '@/utils/cgi'
 import { UserLevel } from '@/utils/enum'
 import { onMounted, ref, watch } from 'vue'
 import taskForm from './form.vue'
-import { getTaskInitFormValue } from './utils'
+import applyForm from './apply.vue'
+import { getTaskInitFormValue, getTaskInitInfo } from './utils'
 import { MessagePlugin, type TableProps } from 'tdesign-vue-next'
 
 enum TaskTab {
@@ -327,6 +335,21 @@ const handleEditSubmit = async () => {
   fetch()
 }
 
+const applyDialogVisible = ref(false)
+const applyDialogValue = ref(getTaskInitInfo())
+const applyDialogInfo = ref(getTaskInitInfo())
+const applyDialogRowId = ref(0)
+const handleApplySubmit = async () => {
+  const resp = await cgi.post(`/cgi/task/${editDialogRowId.value}/apply`, applyDialogValue.value)
+  if (resp.data.code !== 0) {
+    MessagePlugin.warning('提交申请失败，请稍后重试')
+    return
+  }
+  MessagePlugin.success('提交申请成功')
+  applyDialogVisible.value = false
+  fetch()
+}
+
 const handleEvent = async (row: any, event: string) => {
   if (event === 'lock') {
     const resp = await cgi.post(`/cgi/task/${row.taskId}/lock`)
@@ -347,6 +370,11 @@ const handleEvent = async (row: any, event: string) => {
     fetch()
     return
   } else if (event === 'apply') {
+    applyDialogValue.value = getTaskInitInfo()
+    applyDialogInfo.value = row.info
+    applyDialogRowId.value = row.taskId
+    applyDialogVisible.value = true
+    return
   } else if (event === 'withdraw') {
   } else if (event === 'accept') {
   } else if (event === 'reject') {
