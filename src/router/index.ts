@@ -21,7 +21,7 @@ const router = createRouter({
     {
       path: '/self',
       name: 'self',
-      component: () => import('../views/user/index.vue'),
+      component: () => import('../views/self/index.vue'),
     },
   ],
 })

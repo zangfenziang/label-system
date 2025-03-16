@@ -41,7 +41,7 @@ import { MessagePlugin, type FormProps } from 'tdesign-vue-next'
 import { DesktopIcon, LockOnIcon } from 'tdesign-icons-vue-next'
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import CryptoJS from 'crypto-js'
+import { hash } from '@/utils/hash'
 
 const router = useRouter()
 
@@ -49,11 +49,6 @@ const formData = reactive({
   username: '',
   password: '',
 })
-
-const hash = (str: string) => {
-  const hash = CryptoJS.SHA256(str)
-  return hash.toString(CryptoJS.enc.Hex)
-}
 
 const onSubmit: FormProps['onSubmit'] = async ({ validateResult, firstError }) => {
   if (validateResult === true) {
