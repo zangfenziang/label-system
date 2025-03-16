@@ -50,12 +50,19 @@ watch(
       return
     }
     if (model.value) {
+      const resp = await cgi.get(`/cgi/file/${model.value}`)
+      new Blob()
+      const blob = new Blob([resp.data], { type: 'text/plain' })
+      const url = URL.createObjectURL(blob)
+
       files.value = [
         {
           status: 'success',
           response: {
             id: model.value,
           },
+          url,
+          name: 'file.txt',
         },
       ]
     } else {

@@ -69,6 +69,13 @@
   <t-dialog v-model:visible="insertDialogVisible" header="新增任务" :footer="null">
     <task-form v-model="insertDialogValue" @submit="handleInsertSubmit" />
   </t-dialog>
+  <t-dialog
+    v-model:visible="editDialogVisible"
+    :header="`修改任务-${editDialogRowId}`"
+    :footer="null"
+  >
+    <task-form v-model="editDialogValue" @submit="handleEditSubmit" />
+  </t-dialog>
 </template>
 <script lang="ts" setup>
 import { useUserStore } from '@/stores/user'
@@ -306,6 +313,20 @@ const handleInsertSubmit = async () => {
   fetch()
 }
 
+const editDialogVisible = ref(false)
+const editDialogValue = ref(getTaskInitFormValue())
+const editDialogRowId = ref(0)
+const handleEditSubmit = async () => {
+  const resp = await cgi.post(`/cgi/task/${editDialogRowId.value}`, editDialogValue.value)
+  if (resp.data.code !== 0) {
+    MessagePlugin.warning('修改失败，请稍后重试')
+    return
+  }
+  MessagePlugin.success('修改成功')
+  insertDialogVisible.value = false
+  fetch()
+}
+
 const handleEvent = async (row: any, event: string) => {
   if (event === 'lock') {
     const resp = await cgi.post(`/cgi/task/${row.taskId}/lock`)
@@ -330,6 +351,10 @@ const handleEvent = async (row: any, event: string) => {
   } else if (event === 'accept') {
   } else if (event === 'reject') {
   } else if (event === 'edit') {
+    editDialogVisible.value = true
+    editDialogValue.value = JSON.parse(JSON.stringify(row))
+    editDialogRowId.value = row.taskId
+    return
   } else if (event === 'delete') {
     const resp = await cgi.delete(`/cgi/task/${row.taskId}`)
     if (resp.data.code !== 0) {
