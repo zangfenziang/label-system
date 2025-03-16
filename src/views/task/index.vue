@@ -331,6 +331,14 @@ const handleEvent = async (row: any, event: string) => {
   } else if (event === 'reject') {
   } else if (event === 'edit') {
   } else if (event === 'delete') {
+    const resp = await cgi.delete(`/cgi/task/${row.taskId}`)
+    if (resp.data.code !== 0) {
+      MessagePlugin.warning('删除失败')
+    } else {
+      MessagePlugin.success('删除成功')
+    }
+    fetch()
+    return
   }
 }
 
