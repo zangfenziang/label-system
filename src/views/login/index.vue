@@ -66,7 +66,6 @@ const onSubmit: FormProps['onSubmit'] = async ({ validateResult, firstError }) =
       password: hash(formData.password),
     })
     setAccessToken(resp.data.token)
-    MessagePlugin.success('提交成功')
     router.replace({
       path: '/task',
     })
