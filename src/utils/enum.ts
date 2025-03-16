@@ -6,3 +6,8 @@ export enum UserLevel {
   Admin = 9999,
   Normal = 1,
 }
+
+export enum UserStatus {
+  Active = 'active',
+  Inactive = 'inactive',
+}

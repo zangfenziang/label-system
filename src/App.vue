@@ -14,7 +14,7 @@
       </t-head-menu>
     </t-header>
     <t-layout>
-      <t-aside style="border-top: 1px solid var(--component-border)">
+      <t-aside style="border-top: 1px solid rgba(0, 0, 0, 0.05)">
         <t-menu :value="route.path" theme="light" style="margin-right: 50px" @change="handleChange">
           <t-menu-item value="/task">
             <template #icon>
