@@ -63,7 +63,7 @@ const onSubmit: FormProps['onSubmit'] = async ({ validateResult, firstError }) =
     const resp = await cgi.post('/cgi/user/me', {
       password: hash(formData.password),
     })
-    if (resp.status !== 200) {
+    if (resp.data.code !== 0) {
       MessagePlugin.warning('修改失败')
       return
     }
