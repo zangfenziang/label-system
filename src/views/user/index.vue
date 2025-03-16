@@ -33,7 +33,7 @@
       <template #opt="{ row }">
         <t-space>
           <t-link theme="primary" hover="color" @click="reset(row)">重置密码</t-link>
-          <t-link theme="primary" hover="color" @click="goCost(row)">费用详情</t-link>
+          <t-link theme="primary" hover="color" @click="showCost(row)">费用详情</t-link>
           <t-link v-if="row.username !== 'admin'" theme="danger" hover="color" @click="del(row)">
             删除
           </t-link>
@@ -65,6 +65,9 @@
         </t-form-item>
       </t-form>
     </t-dialog>
+    <t-dialog header="费用详情" v-model:visible="costDailogVisible">
+      <cost :list="costList" />
+    </t-dialog>
   </div>
 </template>
 <script lang="ts" setup>
@@ -75,6 +78,7 @@ import { DesktopIcon, LockOnIcon } from 'tdesign-icons-vue-next'
 import { onMounted, ref, watch } from 'vue'
 import { hash } from '@/utils/hash'
 import { useRouter } from 'vue-router'
+import cost from './cost.vue'
 const router = useRouter()
 
 const columns = ref<TableProps['columns']>([
@@ -168,11 +172,12 @@ const reset = async (row: any) => {
   fetch()
 }
 
-const goCost = (row: any) => {
-  const ret = router.resolve({
-    path: '/user/cost',
-  })
-  window.open(ret.href)
+const costDailogVisible = ref(false)
+const costList = ref<any[]>([])
+const showCost = async (row: any) => {
+  const resp = await cgi.get(`/cgi/user/${row.uid}/cost`, {})
+  costList.value = resp.data
+  costDailogVisible.value = true
 }
 
 const showInsertDialog = ref(false)
