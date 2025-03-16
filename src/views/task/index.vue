@@ -87,7 +87,7 @@
 <script lang="ts" setup>
 import { useUserStore } from '@/stores/user'
 import { cgi } from '@/utils/cgi'
-import { UserLevel } from '@/utils/enum'
+import { UserLevel, UserStatus } from '@/utils/enum'
 import { onMounted, ref, watch } from 'vue'
 import taskForm from './form.vue'
 import applyForm from './apply.vue'
@@ -350,6 +350,19 @@ const handleApplySubmit = async () => {
   fetch()
 }
 
+const changeStatus = async (row: any, status: any) => {
+  const resp = await cgi.post(`/cgi/task/${row.taskId}/unlock`, {
+    from: row.taskStatus,
+    to: status,
+  })
+  if (resp.data.code !== 0) {
+    MessagePlugin.warning('操作失败')
+  } else {
+    MessagePlugin.success('操作成功')
+  }
+  fetch()
+}
+
 const handleEvent = async (row: any, event: string) => {
   if (event === 'lock') {
     const resp = await cgi.post(`/cgi/task/${row.taskId}/lock`)
@@ -376,8 +389,20 @@ const handleEvent = async (row: any, event: string) => {
     applyDialogVisible.value = true
     return
   } else if (event === 'withdraw') {
+    const resp = await cgi.post(`/cgi/task/${row.taskId}/withdraw`)
+    if (resp.data.code !== 0) {
+      MessagePlugin.warning('撤回失败')
+    } else {
+      MessagePlugin.success('撤回成功')
+    }
+    fetch()
+    return
   } else if (event === 'accept') {
+    changeStatus(row, TaskTab.Accept)
+    return
   } else if (event === 'reject') {
+    changeStatus(row, TaskTab.Reject)
+    return
   } else if (event === 'edit') {
     editDialogVisible.value = true
     editDialogValue.value = JSON.parse(JSON.stringify(row))
