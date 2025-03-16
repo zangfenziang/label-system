@@ -36,21 +36,40 @@
   </div>
 </template>
 <script lang="ts" setup>
+import { cgi, setAccessToken } from '@/utils/cgi'
 import { MessagePlugin, type FormProps } from 'tdesign-vue-next'
+import { DesktopIcon, LockOnIcon } from 'tdesign-icons-vue-next'
 import { reactive } from 'vue'
+import { useRouter } from 'vue-router'
+import CryptoJS from 'crypto-js'
+
+const router = useRouter()
 
 const formData = reactive({
   username: '',
   password: '',
 })
 
-const onSubmit: FormProps['onSubmit'] = ({ validateResult, firstError }) => {
+const hash = (str: string) => {
+  const hash = CryptoJS.SHA256(str)
+  return hash.toString(CryptoJS.enc.Hex)
+}
+
+const onSubmit: FormProps['onSubmit'] = async ({ validateResult, firstError }) => {
   if (validateResult === true) {
     if (!formData.username || !formData.password) {
       MessagePlugin.warning('请填写账号密码')
       return
     }
+    const resp = await cgi.post('/cgi/sign', {
+      ...formData,
+      password: hash(formData.password),
+    })
+    setAccessToken(resp.data.token)
     MessagePlugin.success('提交成功')
+    router.replace({
+      path: '/task',
+    })
   } else {
     console.log('Validate Errors: ', firstError, validateResult)
     MessagePlugin.warning(firstError || '')

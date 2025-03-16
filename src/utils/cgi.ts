@@ -4,7 +4,6 @@ import { LocalStorageKey } from './enum'
 
 const cache = {
   token: '',
-  expireTime: 0,
   init: false,
 }
 
@@ -15,17 +14,13 @@ const getToken = () => {
       if (str) {
         const info = JSON.parse(str)
         cache.token = info.token
-        cache.expireTime = info.expireTime
       }
     } catch (err) {
     } finally {
       cache.init = true
     }
   }
-  if (Date.now() > cache.expireTime) {
-    return ''
-  }
-  return cache.token
+  return cache.token || ''
 }
 
 export const cgi = axios.create({
@@ -39,29 +34,27 @@ const setCgiAuthorization = () => {
 
 setCgiAuthorization()
 export const logout = () => {
-  setAccessToken('', 0)
+  setAccessToken('')
   location.href = '/'
 }
 
 cgi.interceptors.response.use(
   (response) => response,
   (err) => {
-    if (err.status === 401 && !location.pathname.startsWith('/')) {
+    if (err.status === 401) {
       // 登陆态已经失效
       logout()
     }
   },
 )
 
-export const setAccessToken = (token: string, expireTime: number) => {
+export const setAccessToken = (token: string) => {
   cache.token = token
-  cache.expireTime = expireTime
   cache.init = true
   localStorage.setItem(
     LocalStorageKey.AccessToken,
     JSON.stringify({
       token,
-      expireTime,
     }),
   )
   setCgiAuthorization()
