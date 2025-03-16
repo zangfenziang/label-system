@@ -33,6 +33,7 @@
       <template #opt="{ row }">
         <t-space>
           <t-link theme="primary" hover="color" @click="reset(row)">重置密码</t-link>
+          <t-link theme="primary" hover="color" @click="goCost(row)">费用详情</t-link>
           <t-link v-if="row.username !== 'admin'" theme="danger" hover="color" @click="del(row)">
             删除
           </t-link>
@@ -73,6 +74,8 @@ import { MessagePlugin, NotifyPlugin, type TableProps } from 'tdesign-vue-next'
 import { DesktopIcon, LockOnIcon } from 'tdesign-icons-vue-next'
 import { onMounted, ref, watch } from 'vue'
 import { hash } from '@/utils/hash'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
 const columns = ref<TableProps['columns']>([
   {
@@ -163,6 +166,13 @@ const reset = async (row: any) => {
     closeBtn: true,
   })
   fetch()
+}
+
+const goCost = (row: any) => {
+  const ret = router.resolve({
+    path: '/user/cost',
+  })
+  window.open(ret.href)
 }
 
 const showInsertDialog = ref(false)

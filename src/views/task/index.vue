@@ -209,11 +209,6 @@ const taskStatusOptList: any = {
   ],
   [TaskTab.Accept]: [
     {
-      name: '修改',
-      admin: true,
-      event: 'edit',
-    },
-    {
       name: '删除',
       admin: true,
       theme: 'danger',
