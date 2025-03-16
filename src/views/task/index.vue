@@ -294,6 +294,14 @@ const handleEvent = async (row: any, event: string) => {
     fetch()
     return
   } else if (event === 'unlock') {
+    const resp = await cgi.post(`/cgi/task/${row.taskId}/unlock`)
+    if (resp.data.code !== 0) {
+      MessagePlugin.warning('解锁失败')
+    } else {
+      MessagePlugin.success('解锁成功')
+    }
+    fetch()
+    return
   } else if (event === 'apply') {
   } else if (event === 'withdraw') {
   } else if (event === 'accept') {
