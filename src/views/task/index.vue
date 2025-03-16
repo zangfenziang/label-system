@@ -47,8 +47,10 @@
         </t-space>
       </template>
       <template #taskStatus="{ row }">
-        {{ row?.user?.username }}
         {{ taskTab.find((item) => item.value === row.taskStatus)?.label || '-' }}
+      </template>
+      <template #user="{ row }">
+        {{ row?.user?.username || '-' }}
       </template>
       <template #opt="{ row }">
         <t-space>
@@ -275,6 +277,11 @@ const columns = ref<TableProps['columns']>([
     colKey: 'cost',
     title: '费用',
     width: '80',
+  },
+  {
+    colKey: 'user',
+    title: '领取人',
+    width: '100',
   },
   {
     colKey: 'taskStatus',
