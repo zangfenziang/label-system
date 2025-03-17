@@ -16,7 +16,7 @@
     <t-form-item name="files[2]" label="output-03">
       <Upload v-model="model.files[2]" />
     </t-form-item>
-    <t-form-item name="iles[3]" label="output-04">
+    <t-form-item name="files[3]" label="output-04">
       <Upload v-model="model.files[3]" />
     </t-form-item>
 
