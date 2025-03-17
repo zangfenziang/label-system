@@ -24,7 +24,7 @@ const getToken = () => {
 }
 
 export const cgi = axios.create({
-  baseURL: isProd() ? 'TODO' : 'http://127.0.0.1:3000',
+  baseURL: isProd() ? '/' : 'http://127.0.0.1:3000',
 })
 
 const setCgiAuthorization = () => {

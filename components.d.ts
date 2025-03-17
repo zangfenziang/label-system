@@ -28,14 +28,10 @@ declare module 'vue' {
     TMenu: typeof import('tdesign-vue-next')['Menu']
     TMenuItem: typeof import('tdesign-vue-next')['MenuItem']
     TPagination: typeof import('tdesign-vue-next')['Pagination']
-    TRadio: typeof import('tdesign-vue-next')['Radio']
     TRadioButton: typeof import('tdesign-vue-next')['RadioButton']
     TRadioGroup: typeof import('tdesign-vue-next')['RadioGroup']
-    TSelect: typeof import('tdesign-vue-next')['Select']
     TSpace: typeof import('tdesign-vue-next')['Space']
     TTable: typeof import('tdesign-vue-next')['Table']
-    TTextarea: typeof import('tdesign-vue-next')['Textarea']
-    TTypographyParagraph: typeof import('tdesign-vue-next')['Paragraph']
     TUpload: typeof import('tdesign-vue-next')['Upload']
   }
 }
