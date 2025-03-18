@@ -437,7 +437,10 @@ const download = async (id: string, name: string) => {
   a.click()
 }
 
-watch(() => [pageSize.value, current.value, status.value], fetch)
+watch(() => [pageSize.value, current.value], fetch)
+watch(status, () => {
+  current.value = 1
+})
 
 onMounted(fetch)
 </script>
