@@ -1,5 +1,5 @@
 <template>
-  <t-layout v-if="!publicPage" style="height: 100%">
+  <t-layout v-if="!publicPage" style="height: 100%; overflow: scroll">
     <t-header>
       <t-head-menu value="item1" height="120px">
         <template #logo>
