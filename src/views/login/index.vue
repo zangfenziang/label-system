@@ -153,7 +153,7 @@ const onRegisterSubmit: FormProps['onSubmit'] = async ({ validateResult, firstEr
       return
     }
     try {
-      const resp = await cgi.post('/cgi/user', {
+      await cgi.put('/cgi/user', {
         username: registerFormData.value.username,
         password: hash(registerFormData.value.password),
       })
