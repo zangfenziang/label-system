@@ -262,12 +262,12 @@ const columns = ref<TableProps['columns']>([
   {
     colKey: 'info',
     title: '原始数据',
-    width: '150',
+    width: '200',
   },
   {
     colKey: 'labelInfo',
     title: '修改数据',
-    width: '150',
+    width: '200',
   },
   {
     colKey: 'cost',
