@@ -12,7 +12,8 @@
     </t-space>
     <t-table row-key="taskId" :data="list" :columns="columns">
       <template #info="{ row }">
-        <t-space>
+        <div v-if="!row.info.files?.length">暂无权限</div>
+        <t-space v-else>
           下载：
           <t-link theme="primary" @click="download(row.info.files[0], `${row.taskId}-01.txt`)"
             >01</t-link
@@ -439,7 +440,11 @@ const download = async (id: string, name: string) => {
 
 watch(() => [pageSize.value, current.value], fetch)
 watch(status, () => {
-  current.value = 1
+  if (current.value !== 1) {
+    current.value = 1
+    return
+  }
+  fetch()
 })
 
 onMounted(fetch)

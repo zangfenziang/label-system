@@ -36,10 +36,10 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { cgi, setAccessToken } from '@/utils/cgi'
+import { cgi, isLogin, setAccessToken } from '@/utils/cgi'
 import { MessagePlugin, type FormProps } from 'tdesign-vue-next'
 import { DesktopIcon, LockOnIcon } from 'tdesign-icons-vue-next'
-import { reactive } from 'vue'
+import { reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { hash } from '@/utils/hash'
 
@@ -49,6 +49,12 @@ const formData = reactive({
   username: '',
   password: '',
 })
+
+const goHome = () => {
+  router.replace({
+    path: '/task',
+  })
+}
 
 const onSubmit: FormProps['onSubmit'] = async ({ validateResult, firstError }) => {
   if (validateResult === true) {
@@ -61,14 +67,19 @@ const onSubmit: FormProps['onSubmit'] = async ({ validateResult, firstError }) =
       password: hash(formData.password),
     })
     setAccessToken(resp.data.token)
-    router.replace({
-      path: '/task',
-    })
+    goHome()
   } else {
     console.log('Validate Errors: ', firstError, validateResult)
     MessagePlugin.warning(firstError || '')
   }
 }
+
+onMounted(async () => {
+  const res = await isLogin()
+  if (res) {
+    goHome()
+  }
+})
 </script>
 <style scoped>
 .login-page {

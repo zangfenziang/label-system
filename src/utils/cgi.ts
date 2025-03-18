@@ -60,7 +60,7 @@ export const setAccessToken = (token: string) => {
   setCgiAuthorization()
 }
 
-export const isLogin = () => {
-  const token = getToken()
-  return !!token
+export const isLogin = async () => {
+  const resp = await cgi.get('/cgi/loginsession')
+  return resp?.data?.code === 0 ? true : false
 }
