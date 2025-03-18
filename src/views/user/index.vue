@@ -158,7 +158,7 @@ const rand = (length: number) => {
 
 const reset = async (row: any) => {
   const password = rand(16)
-  const resp = await cgi.post(`/cgi/user/${row.uid}`, { password })
+  const resp = await cgi.post(`/cgi/user/${row.uid}`, { password: hash(password) })
   if (resp.data.code !== 0) {
     MessagePlugin.warning('修改失败，请稍后重试')
     return
