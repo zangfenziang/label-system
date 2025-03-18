@@ -3,7 +3,7 @@
     <div class="login-page__inner">
       <div class="login-page-title">Label System</div>
       <t-form
-        ref="form"
+        v-if="tab === 1"
         :data="formData"
         :colon="true"
         :label-width="0"
@@ -31,7 +31,57 @@
         </t-form-item>
       </t-form>
 
-      <div class="login-page-tips">有问题的联系方式</div>
+      <t-form
+        v-else
+        :data="registerFormData"
+        :colon="true"
+        :label-width="0"
+        @submit="onRegisterSubmit"
+        style="width: 100%"
+      >
+        <t-form-item name="username">
+          <t-input v-model="registerFormData.username" clearable placeholder="请输入账户名">
+            <template #prefix-icon>
+              <desktop-icon />
+            </template>
+          </t-input>
+        </t-form-item>
+
+        <t-form-item name="password">
+          <t-input
+            v-model="registerFormData.password"
+            type="password"
+            clearable
+            placeholder="请输入密码"
+          >
+            <template #prefix-icon>
+              <lock-on-icon />
+            </template>
+          </t-input>
+        </t-form-item>
+
+        <t-form-item name="repeatPasswd">
+          <t-input
+            v-model="registerFormData.repeatPasswd"
+            type="password"
+            clearable
+            placeholder="请再次输入密码"
+          >
+            <template #prefix-icon>
+              <lock-on-icon />
+            </template>
+          </t-input>
+        </t-form-item>
+
+        <t-form-item style="margin: 32px 0 0 0">
+          <t-button theme="primary" size="large" type="submit" block>注册</t-button>
+        </t-form-item>
+      </t-form>
+
+      <div class="login-page-tips">
+        <t-link v-if="tab === 1" theme="primary" hover="color" @click="tab = 2">注册</t-link>
+        <t-link v-else theme="primary" hover="color" @click="tab = 1">登录</t-link>
+      </div>
     </div>
   </div>
 </template>
@@ -39,12 +89,13 @@
 import { cgi, isLogin, setAccessToken } from '@/utils/cgi'
 import { MessagePlugin, type FormProps } from 'tdesign-vue-next'
 import { DesktopIcon, LockOnIcon } from 'tdesign-icons-vue-next'
-import { reactive, onMounted } from 'vue'
+import { reactive, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { hash } from '@/utils/hash'
 
 const router = useRouter()
 
+const tab = ref(1) // 1 登陆 2 注册
 const formData = reactive({
   username: '',
   password: '',
@@ -62,12 +113,55 @@ const onSubmit: FormProps['onSubmit'] = async ({ validateResult, firstError }) =
       MessagePlugin.warning('请填写账号密码')
       return
     }
-    const resp = await cgi.post('/cgi/sign', {
-      ...formData,
-      password: hash(formData.password),
-    })
-    setAccessToken(resp.data.token)
-    goHome()
+    try {
+      const resp = await cgi.post('/cgi/sign', {
+        ...formData,
+        password: hash(formData.password),
+      })
+      setAccessToken(resp.data.token)
+      goHome()
+    } catch (err) {
+      MessagePlugin.warning('账号密码错误')
+    }
+  } else {
+    console.log('Validate Errors: ', firstError, validateResult)
+    MessagePlugin.warning(firstError || '')
+  }
+}
+
+const registerFormData = ref({
+  username: '',
+  password: '',
+  repeatPasswd: '',
+})
+
+const onRegisterSubmit: FormProps['onSubmit'] = async ({ validateResult, firstError }) => {
+  if (validateResult === true) {
+    if (!registerFormData.value.username) {
+      MessagePlugin.warning('请填写账号名')
+      return
+    }
+    if (!registerFormData.value.password) {
+      MessagePlugin.warning('请填写密码')
+      return
+    }
+    if (
+      !registerFormData.value.repeatPasswd ||
+      registerFormData.value.repeatPasswd !== registerFormData.value.password
+    ) {
+      MessagePlugin.warning('两次输入密码不一致')
+      return
+    }
+    try {
+      const resp = await cgi.post('/cgi/user', {
+        username: registerFormData.value.username,
+        password: hash(registerFormData.value.password),
+      })
+      MessagePlugin.success('已注册')
+      tab.value = 1
+    } catch (err) {
+      MessagePlugin.warning('注册失败，请稍后重试')
+    }
   } else {
     console.log('Validate Errors: ', firstError, validateResult)
     MessagePlugin.warning(firstError || '')
