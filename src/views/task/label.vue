@@ -62,7 +62,8 @@
           @input="calcTextareaWidth"
         ></textarea>
       </div>
-      <t-space>
+      <t-space style="align-self: flex-end">
+        <t-button v-if="step !== 0" @click="pre" theme="default">上一步</t-button>
         <t-button theme="default" @click="showDialog = true">对比</t-button>
         <t-button @click="next">{{ step === 3 ? '提交' : '下一步' }}</t-button>
       </t-space>
@@ -119,6 +120,11 @@ const setTextInit = async () => {
   nextTick(() => {
     calcTextareaWidth()
   })
+}
+
+const pre = () => {
+  step.value = step.value - 1
+  setTextInit()
 }
 
 const next = async () => {
