@@ -38,7 +38,7 @@
         style="
           margin: 40px 0;
           width: 800px;
-          height: 50vh;
+          height: 40vh;
           overflow-x: scroll;
           border-radius: 4px;
           border: 1px solid var(--td-brand-color);
@@ -76,7 +76,7 @@
 </template>
 <script setup lang="ts">
 import { cgi } from '@/utils/cgi'
-import { MessagePlugin } from 'tdesign-vue-next'
+import { MessagePlugin, TabPanel } from 'tdesign-vue-next'
 import { nextTick, onMounted, ref, withCtx } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -152,6 +152,7 @@ const nextTask = () => {
       taskId: nextId.value,
     },
   })
+  step.value = 1
   load()
 }
 
