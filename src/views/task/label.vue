@@ -143,7 +143,7 @@ const submit = async () => {
     MessagePlugin.warning('提交申请失败，请稍后重试')
     return
   }
-  MessagePlugin.success('已提交申请，自动跳转下一个任务')
+  MessagePlugin.success(nextId.value ? '已提交申请，自动跳转下一个任务' : '已提交申请')
   setTimeout(() => {
     if (nextId.value) {
       nextTask()
