@@ -21,8 +21,46 @@
         <t-step-item title="03" />
         <t-step-item title="04" />
       </t-steps>
-      <div style="margin: 40px 0; width: 800px">
-        <t-textarea v-model="text" autofocus :autosize="{ minRows: 20, maxRows: 20 }"></t-textarea>
+      <div
+        ref="calc"
+        style="
+          position: fixed;
+          font-size: 14px;
+          line-height: 18px;
+          font-family: PingFang SC;
+          white-space: pre;
+          top: -10000px;
+        "
+      >
+        {{ text }}
+      </div>
+      <div
+        style="
+          margin: 40px 0;
+          width: 800px;
+          height: 50vh;
+          overflow-x: scroll;
+          border-radius: 4px;
+          border: 1px solid var(--td-brand-color);
+          padding: 8px;
+        "
+      >
+        <textarea
+          v-model="text"
+          style="
+            height: 100%;
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 14px;
+            line-height: 18px;
+            font-family: PingFang SC;
+            padding: 0;
+            min-width: 100%;
+          "
+          :style="{ width: `${width}px` }"
+          @input="calcTextareaWidth"
+        ></textarea>
       </div>
       <t-space>
         <t-button theme="default" @click="showDialog = true">对比</t-button>
@@ -39,7 +77,7 @@
 <script setup lang="ts">
 import { cgi } from '@/utils/cgi'
 import { MessagePlugin } from 'tdesign-vue-next'
-import { onMounted, ref } from 'vue'
+import { nextTick, onMounted, ref, withCtx } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
@@ -57,6 +95,13 @@ const text = ref('')
 const labelFiles = ref<string[]>([])
 const showDialog = ref(false)
 
+const width = ref(10000)
+const calc = ref()
+const calcTextareaWidth = () => {
+  console.log(calc.value.offsetWidth)
+  width.value = calc.value.offsetWidth + 2
+}
+
 const getFileInfo = async (id: string) => {
   const resp = await cgi.get(`/cgi/file/${id}`)
   return resp.data
@@ -71,6 +116,9 @@ const setTextInit = async () => {
   } else {
     text.value = fileValue.value
   }
+  nextTick(() => {
+    calcTextareaWidth()
+  })
 }
 
 const next = async () => {
@@ -117,6 +165,6 @@ const load = async () => {
   setTextInit()
 }
 
-onMounted(load())
+onMounted(() => load())
 </script>
 <style scoped></style>
