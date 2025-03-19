@@ -158,7 +158,7 @@ const nextTask = () => {
       taskId: nextId.value,
     },
   })
-  step.value = 1
+  step.value = 0
   load()
 }
 
