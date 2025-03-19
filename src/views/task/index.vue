@@ -91,11 +91,14 @@
 import { useUserStore } from '@/stores/user'
 import { cgi } from '@/utils/cgi'
 import { UserLevel, UserStatus } from '@/utils/enum'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch, withCtx } from 'vue'
 import taskForm from './form.vue'
 import applyForm from './apply.vue'
 import { getTaskInitFormValue, getTaskInitInfo } from './utils'
 import { MessagePlugin, type TableProps } from 'tdesign-vue-next'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 enum TaskTab {
   Waiting = 'waiting',
@@ -158,9 +161,9 @@ const taskStatusOptList: any = {
   ],
   [TaskTab.Lock]: [
     {
-      name: '提交审核',
+      name: '标注',
       self: true,
-      event: 'apply',
+      event: 'label',
     },
     {
       name: '解锁',
@@ -420,6 +423,14 @@ const handleEvent = async (row: any, event: string) => {
     }
     fetch()
     return
+  } else if (event === 'label') {
+    const url = router.resolve({
+      path: '/task/label',
+      query: {
+        taskId: row.taskId,
+      },
+    })
+    window.open(url.href)
   }
 }
 

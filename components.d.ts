@@ -31,7 +31,10 @@ declare module 'vue' {
     TRadioButton: typeof import('tdesign-vue-next')['RadioButton']
     TRadioGroup: typeof import('tdesign-vue-next')['RadioGroup']
     TSpace: typeof import('tdesign-vue-next')['Space']
+    TStepItem: typeof import('tdesign-vue-next')['StepItem']
+    TSteps: typeof import('tdesign-vue-next')['Steps']
     TTable: typeof import('tdesign-vue-next')['Table']
+    TTextarea: typeof import('tdesign-vue-next')['Textarea']
     TUpload: typeof import('tdesign-vue-next')['Upload']
   }
 }

@@ -14,6 +14,11 @@ const router = createRouter({
       component: () => import('../views/task/index.vue'),
     },
     {
+      path: '/task/label',
+      name: 'task-label',
+      component: () => import('../views/task/label.vue'),
+    },
+    {
       path: '/user',
       name: 'user',
       component: () => import('../views/user/index.vue'),
