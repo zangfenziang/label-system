@@ -144,11 +144,13 @@ const submit = async () => {
     return
   }
   MessagePlugin.success('已提交申请，自动跳转下一个任务')
-  if (nextId.value) {
-    nextTask()
-  } else {
-    window.close()
-  }
+  setTimeout(() => {
+    if (nextId.value) {
+      nextTask()
+    } else {
+      window.close()
+    }
+  }, 1000)
 }
 
 const nextTask = () => {
@@ -158,12 +160,12 @@ const nextTask = () => {
       taskId: nextId.value,
     },
   })
+  taskId.value = nextId.value
   step.value = 0
   load()
 }
 
 const load = async () => {
-  taskId.value = Number(route.query.taskId)
   const resp = await cgi.get(`/cgi/task/${taskId.value}/label`)
   files.value = resp.data.task.info.files
   title.value = resp.data.task.title
@@ -172,6 +174,9 @@ const load = async () => {
   setTextInit()
 }
 
-onMounted(() => load())
+onMounted(() => {
+  taskId.value = Number(route.query.taskId)
+  load()
+})
 </script>
 <style scoped></style>
