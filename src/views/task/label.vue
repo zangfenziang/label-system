@@ -89,11 +89,9 @@ const submit = async () => {
     MessagePlugin.warning('提交申请失败，请稍后重试')
     return
   }
-  MessagePlugin.success('已提交申请')
+  MessagePlugin.success('已提交申请，自动跳转下一个任务')
   if (nextId.value) {
-    setTimeout(() => {
-      nextTask()
-    }, 1000)
+    nextTask()
   } else {
     window.close()
   }
@@ -105,12 +103,11 @@ const nextTask = () => {
     query: {
       taskId: nextId.value,
     },
-    replace: true,
-    force: true,
   })
+  load()
 }
 
-onMounted(async () => {
+const load = async () => {
   taskId.value = Number(route.query.taskId)
   const resp = await cgi.get(`/cgi/task/${taskId.value}/label`)
   files.value = resp.data.task.info.files
@@ -118,6 +115,8 @@ onMounted(async () => {
   num.value = resp.data.lock
   nextId.value = resp.data.next
   setTextInit()
-})
+}
+
+onMounted(load())
 </script>
 <style scoped></style>
