@@ -21,46 +21,8 @@
         <t-step-item title="03" />
         <t-step-item title="04" />
       </t-steps>
-      <div
-        ref="calc"
-        style="
-          position: fixed;
-          font-size: 14px;
-          line-height: 18px;
-          font-family: PingFang SC;
-          white-space: pre;
-          top: -10000px;
-        "
-      >
-        {{ text }}
-      </div>
-      <div
-        style="
-          margin: 40px 0;
-          width: 800px;
-          height: 40vh;
-          overflow-x: scroll;
-          border-radius: 4px;
-          border: 1px solid var(--td-brand-color);
-          padding: 8px;
-        "
-      >
-        <textarea
-          v-model="text"
-          style="
-            height: 100%;
-            border: none;
-            outline: none;
-            resize: none;
-            font-size: 14px;
-            line-height: 18px;
-            font-family: PingFang SC;
-            padding: 0;
-            min-width: 100%;
-          "
-          :style="{ width: `${width}px` }"
-          @input="calcTextareaWidth"
-        ></textarea>
+      <div style="width: 900px; margin: 40px 0">
+        <v-md-editor v-model="text" height="560px"></v-md-editor>
       </div>
       <t-space style="align-self: flex-end">
         <t-button v-if="step !== 0" @click="pre" theme="default">上一步</t-button>

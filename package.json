@@ -14,6 +14,7 @@
     "postbuild": "chmod -R 777 ./dist"
   },
   "dependencies": {
+    "@kangc/v-md-editor": "^2.3.18",
     "axios": "^1.8.3",
     "crypto-js": "^4.2.0",
     "pinia": "^3.0.1",
