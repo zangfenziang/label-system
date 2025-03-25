@@ -70,7 +70,7 @@ const showDialog = ref(false)
 
 const getFileInfo = async (id: string) => {
   const resp = await cgi.get(`/cgi/file/${id}`)
-  return resp.data
+  return String(resp.data)
 }
 
 const showHelpDialog = ref(false)
