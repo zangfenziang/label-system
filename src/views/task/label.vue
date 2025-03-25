@@ -13,7 +13,12 @@
       "
     >
       <div style="align-self: flex-start; margin: 44px 0; font-size: 20px">
-        当前任务：{{ title }}<span style="margin-left: 16px">待处理任务：{{ num }}</span>
+        当前任务：{{ title }}<span style="margin-left: 16px">待处理任务：{{ num }}</span
+        ><span
+          style="margin-left: 16px; color: var(--td-brand-color); cursor: pointer"
+          @click="help"
+          >指令</span
+        >
       </div>
       <t-steps v-model="step" theme="dot" readonly>
         <t-step-item title="01" />
@@ -22,7 +27,7 @@
         <t-step-item title="04" />
       </t-steps>
       <div style="width: 65vw; margin: 40px 0">
-        <v-md-editor v-model="text" height="560px"></v-md-editor>
+        <v-md-editor v-model="text" height="50vh"></v-md-editor>
       </div>
       <t-space style="align-self: flex-end">
         <t-button v-if="step !== 0" @click="pre" theme="default">上一步</t-button>
@@ -33,6 +38,11 @@
     <t-dialog v-model:visible="showDialog" width="80%" :footer="false" header="对比">
       <div style="width: 100%; height: 60vh; overflow-y: scroll">
         <Diff :prev="fileValue" :current="text" mode="unified" theme="custom"></Diff>
+      </div>
+    </t-dialog>
+    <t-dialog v-model:visible="showHelpDialog" width="80%" :footer="false" header="指令">
+      <div style="width: 100%; height: 60vh; overflow-y: scroll">
+        <v-md-preview :text="helpText"></v-md-preview>
       </div>
     </t-dialog>
   </div>
@@ -58,16 +68,16 @@ const text = ref('')
 const labelFiles = ref<string[]>([])
 const showDialog = ref(false)
 
-const width = ref(10000)
-const calc = ref()
-const calcTextareaWidth = () => {
-  console.log(calc.value.offsetWidth)
-  width.value = calc.value.offsetWidth + 2
-}
-
 const getFileInfo = async (id: string) => {
   const resp = await cgi.get(`/cgi/file/${id}`)
   return resp.data
+}
+
+const showHelpDialog = ref(false)
+const helpText = ref('')
+const help = async () => {
+  helpText.value = await getFileInfo(`readme-0${step.value + 1}.md`)
+  showHelpDialog.value = true
 }
 
 const setTextInit = async () => {
@@ -79,9 +89,6 @@ const setTextInit = async () => {
   } else {
     text.value = fileValue.value
   }
-  nextTick(() => {
-    calcTextareaWidth()
-  })
 }
 
 const pre = () => {
