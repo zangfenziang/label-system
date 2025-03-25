@@ -21,7 +21,7 @@
         <t-step-item title="03" />
         <t-step-item title="04" />
       </t-steps>
-      <div style="width: 900px; margin: 40px 0">
+      <div style="width: 65vw; margin: 40px 0">
         <v-md-editor v-model="text" height="560px"></v-md-editor>
       </div>
       <t-space style="align-self: flex-end">
