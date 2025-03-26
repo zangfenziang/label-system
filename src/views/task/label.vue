@@ -104,9 +104,6 @@ const save = async () => {
 }
 
 const pre = async () => {
-  if (!(await save())) {
-    return
-  }
   step.value = step.value - 1
   setTextInit()
 }
