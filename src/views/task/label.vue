@@ -91,7 +91,19 @@ const setTextInit = async () => {
   }
 }
 
-const pre = () => {
+const save = async () => {
+  const resp = await cgi.post(`/cgi/task/${taskId.value}/save`, { files: labelFiles.value })
+  if (resp.data.code !== 0) {
+    MessagePlugin.warning('保存失败，请稍后重试')
+    return false
+  }
+  return true
+}
+
+const pre = async () => {
+  if (!(await save())) {
+    return
+  }
   step.value = step.value - 1
   setTextInit()
 }
@@ -101,6 +113,9 @@ const next = async () => {
   labelFiles.value[step.value] = resp.data.id
   if (step.value === 3) {
     submit()
+    return
+  }
+  if (!(await save())) {
     return
   }
   step.value = step.value + 1
