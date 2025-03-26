@@ -33,16 +33,28 @@
         <div v-if="!row.labelInfo.files.length">暂无</div>
         <t-space v-else>
           下载：
-          <t-link theme="primary" @click="download(row.labelInfo.files[0], `${row.taskId}-01.txt`)"
+          <t-link
+            theme="primary"
+            v-if="row.labelInfo.files[0]"
+            @click="download(row.labelInfo.files[0], `${row.taskId}-01.txt`)"
             >01</t-link
           >
-          <t-link theme="primary" @click="download(row.labelInfo.files[1], `${row.taskId}-02.txt`)"
+          <t-link
+            theme="primary"
+            v-if="row.labelInfo.files[1]"
+            @click="download(row.labelInfo.files[1], `${row.taskId}-02.txt`)"
             >02</t-link
           >
-          <t-link theme="primary" @click="download(row.labelInfo.files[2], `${row.taskId}-03.txt`)"
+          <t-link
+            theme="primary"
+            v-if="row.labelInfo.files[2]"
+            @click="download(row.labelInfo.files[2], `${row.taskId}-03.txt`)"
             >03</t-link
           >
-          <t-link theme="primary" @click="download(row.labelInfo.files[3], `${row.taskId}-04.txt`)"
+          <t-link
+            theme="primary"
+            v-if="row.labelInfo.files[3]"
+            @click="download(row.labelInfo.files[3], `${row.taskId}-04.txt`)"
             >04</t-link
           >
         </t-space>
