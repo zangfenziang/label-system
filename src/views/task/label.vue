@@ -37,7 +37,7 @@
     </div>
     <t-dialog v-model:visible="showDialog" width="80%" :footer="false" header="对比">
       <div style="width: 100%; height: 60vh; overflow-y: scroll">
-        <Diff :prev="fileValue" :current="text" mode="unified" theme="custom"></Diff>
+        <Diff :prev="originFileValue" :current="text" mode="unified" theme="custom"></Diff>
       </div>
     </t-dialog>
     <t-dialog v-model:visible="showHelpDialog" width="80%" :footer="false" header="指令">
@@ -61,7 +61,9 @@ const step = ref(0)
 const title = ref('')
 const num = ref('')
 const nextId = ref(0)
+const originFiles = ref<string[]>([])
 const files = ref<string[]>([])
+const originFileValue = ref('')
 const fileValue = ref('')
 const text = ref('')
 
@@ -81,6 +83,7 @@ const help = async () => {
 }
 
 const setTextInit = async () => {
+  originFileValue.value = await getFileInfo(originFiles.value[step.value])
   const id = files.value[step.value]
   fileValue.value = await getFileInfo(id)
   const labelId = labelFiles.value[step.value]
@@ -151,7 +154,11 @@ const nextTask = () => {
 
 const load = async () => {
   const resp = await cgi.get(`/cgi/task/${taskId.value}/label`)
-  files.value = resp.data.task.info.files
+  originFiles.value = resp.data.task.info.files
+  files.value = resp.data.task.info.files.map((item: any, index: number) => {
+    const label = resp.data.task.labelInfo?.files?.[index]
+    return label || item
+  })
   title.value = resp.data.task.title
   num.value = resp.data.lock
   nextId.value = resp.data.next
