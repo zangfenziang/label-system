@@ -19,6 +19,11 @@ const router = createRouter({
       component: () => import('../views/task/label.vue'),
     },
     {
+      path: '/task/preview',
+      name: 'task-preview',
+      component: () => import('../views/task/preview.vue'),
+    },
+    {
       path: '/user',
       name: 'user',
       component: () => import('../views/user/index.vue'),

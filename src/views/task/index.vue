@@ -175,6 +175,11 @@ const taskStatusOptList: any = {
     {
       name: '标注',
       self: true,
+      event: 'preview',
+    },
+    {
+      name: '编辑',
+      self: true,
       event: 'label',
     },
     {
@@ -438,6 +443,14 @@ const handleEvent = async (row: any, event: string) => {
   } else if (event === 'label') {
     const url = router.resolve({
       path: '/task/label',
+      query: {
+        taskId: row.taskId,
+      },
+    })
+    window.open(url.href)
+  } else if (event === 'preview') {
+    const url = router.resolve({
+      path: '/task/preview',
       query: {
         taskId: row.taskId,
       },
