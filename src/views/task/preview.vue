@@ -3,7 +3,7 @@
     <iframe
       ref="iframe"
       style="width: 100%; height: 100%; border: none"
-      src="http://localhost:5174/"
+      :src="isProd() ? '/threejs' : 'http://localhost:5174/'"
     />
   </div>
 </template>
@@ -11,6 +11,7 @@
 import { cgi } from '@/utils/cgi'
 import { onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { isProd } from '@/utils/const'
 
 const route = useRoute()
 const taskId = ref(0)
