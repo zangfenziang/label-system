@@ -114,6 +114,9 @@ const exportJson = async (data: any) => {
   const result = await cgi.post('/cgi/file/export', {
     files: [id],
   })
+  if (result.data.code !== 0) {
+    MessagePlugin.error(result.data.msg || '保存失败')
+  }
   const { connection, furniture, orientation } = result.data
   const ids = await Promise.all(
     [furniture, orientation, connection].map(async (str) => {
