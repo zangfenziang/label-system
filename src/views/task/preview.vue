@@ -116,6 +116,7 @@ const exportJson = async (data: any) => {
   })
   if (result.data.code !== 0) {
     MessagePlugin.error(result.data.msg || '保存失败')
+    return
   }
   const { connection, furniture, orientation } = result.data
   const ids = await Promise.all(
