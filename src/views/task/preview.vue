@@ -26,7 +26,7 @@
 </template>
 <script setup lang="ts">
 import { cgi } from '@/utils/cgi'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { isProd } from '@/utils/const'
 import { MessagePlugin } from 'tdesign-vue-next'
@@ -81,7 +81,7 @@ const load = async () => {
   title.value = resp.data.task.title
   num.value = resp.data.lock
   nextId.value = resp.data.next
-  const result = await cgi.post('/cgi/file/conv', {
+  const result = await cgi.post('/cgi/file/extract', {
     files: files.value,
   })
   iframeData.value = result.data
@@ -109,23 +109,46 @@ const saveFirst = async () => {
     showDrawer.value = false
   }
 }
-
+const exportJson = async (data: any) => {
+  const id = await uploadFile(data.json)
+  const result = await cgi.post('/cgi/file/export', {
+    files: [id],
+  })
+  const { connection, furniture, orientation } = result.data
+  const ids = await Promise.all(
+    [furniture, orientation, connection].map(async (str) => {
+      return await uploadFile(str)
+    }),
+  )
+  const arr = [files.value[0], ...ids]
+  const ret = await save(arr)
+  if (ret) {
+    MessagePlugin.success('已导出')
+    files.value = arr
+  }
+}
+const listenMessage = (e: any) => {
+  if (typeof e.data !== 'string') {
+    return
+  }
+  try {
+    const data = JSON.parse(e.data)
+    if (data.event === 'ready') {
+      iframeReady.value = true
+    } else if (data.event === 'export') {
+      exportJson(data.data)
+    }
+  } catch (err) {
+    console.error(e)
+  }
+}
 onMounted(() => {
   contentWindow = iframe.value.contentWindow
-  window.addEventListener('message', (e: any) => {
-    if (typeof e.data !== 'string') {
-      return
-    }
-    try {
-      const data = JSON.parse(e.data)
-      if (data.event === 'ready') {
-        iframeReady.value = true
-      }
-    } catch (err) {
-      console.error(e)
-    }
-  })
+  window.addEventListener('message', listenMessage)
   taskId.value = Number(route.query.taskId)
   load()
+})
+onUnmounted(() => {
+  window.removeEventListener('message', listenMessage)
 })
 </script>
