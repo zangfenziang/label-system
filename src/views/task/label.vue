@@ -67,7 +67,6 @@ const originFileValue = ref('')
 const fileValue = ref('')
 const text = ref('')
 
-const labelFiles = ref<string[]>([])
 const showDialog = ref(false)
 
 const getFileInfo = async (id: string) => {
@@ -86,31 +85,29 @@ const setTextInit = async () => {
   originFileValue.value = await getFileInfo(originFiles.value[step.value])
   const id = files.value[step.value]
   fileValue.value = await getFileInfo(id)
-  const labelId = labelFiles.value[step.value]
-  if (labelId) {
-    text.value = await getFileInfo(labelId)
-  } else {
-    text.value = fileValue.value
-  }
+  text.value = fileValue.value
 }
 
 const save = async () => {
-  const resp = await cgi.post(`/cgi/task/${taskId.value}/save`, { files: labelFiles.value })
+  const resp = await cgi.post(`/cgi/task/${taskId.value}/save`, { files: files.value })
   if (resp.data.code !== 0) {
     MessagePlugin.warning('保存失败，请稍后重试')
     return false
   }
   return true
 }
-
+const saveStepInfo = async () => {
+  const resp = await cgi.put('/cgi/file', { content: text.value })
+  files.value[step.value] = resp.data.id
+}
 const pre = async () => {
+  await saveStepInfo()
   step.value = step.value - 1
   setTextInit()
 }
 
 const next = async () => {
-  const resp = await cgi.put('/cgi/file', { content: text.value })
-  labelFiles.value[step.value] = resp.data.id
+  await saveStepInfo()
   if (step.value === 3) {
     submit()
     return
@@ -122,7 +119,7 @@ const next = async () => {
   setTextInit()
 }
 const submit = async () => {
-  const resp = await cgi.post(`/cgi/task/${taskId.value}/apply`, { files: labelFiles.value })
+  const resp = await cgi.post(`/cgi/task/${taskId.value}/apply`, { files: files.value })
   if (resp.data.code !== 0) {
     MessagePlugin.warning('提交申请失败，请稍后重试')
     return
